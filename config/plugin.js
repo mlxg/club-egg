@@ -2,19 +2,12 @@
 
 /** @type Egg.EggPlugin */
 module.exports = {
-    // had enabled by egg
-    // static: {
-    //   enable: true,
-    // }
-};
-
-exports.mysql = {
-    enable : true,
-    package: 'egg-mysql'
-};
-
-exports.nunjucks = {
-    enable: true,
-    package: 'egg-view-nunjucks'
-
+    mysql: {
+        enable: true,
+        package: 'egg-mysql'
+    },
+    nunjucks: {
+        enable: true,
+        package: 'egg-view-nunjucks'
+    }
 };

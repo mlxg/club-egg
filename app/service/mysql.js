@@ -35,7 +35,7 @@ module.exports = app => {
                 ? yield this.app.mysql.select('student')
                 : yield this.app.mysql.select('student', {
                     where: {name: data}, // WHERE 条件
-                    columns: ['name', 'data'], // 要查询的表字段
+                    columns: ['id', 'name', 'data'], // 要查询的表字段
                     orders: ['data'], // 排序方式
                     limit: 5,
                     offset: 0, // 数据偏移量

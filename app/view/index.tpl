@@ -64,7 +64,7 @@
                 url: '/add/' + data,
                 success: function (data) {
                     if (data == 'success') {
-                        alert('上传成功！');
+                        reload();
                     }
                 }
             });
@@ -79,7 +79,8 @@
                 url: '/del/' + data,
                 success: function (data) {
                     if (data == 'success') {
-                        alert('删除成功！');
+
+                        reload();
                     }
                 }
             });
@@ -89,32 +90,7 @@
     //reach
     $('button:eq(1)').on('click', function () {
         var data = $('input').val();
-        if (data) {
-            $.ajax({
-                type: 'get',
-                url: '/get/' + data,
-                success: function (data) {
-                    if (data) {
-
-                        let str = '';
-                        $('.table tbody').html().length && $('.table tbody').empty();
-                        // alert('查询成功！');
-                        $.each(data, (i, item) => {
-                            str +=
-                                ' <tr>' +
-                                ' <th scope="row">' + i + '</th>' +
-                                ' <td>' + item.name + '</td>' +
-                                ' <td>' + item.data + '</td>' +
-                                ' </tr>';
-                        });
-
-                        $('.table tbody').append(str);
-
-
-                    }
-                }
-            });
-        }
+        data && reload(data);
     });
 
     $('button:eq(2)').on('click', function () {
@@ -125,12 +101,45 @@
                 url: '/update/' + data,
                 success: function (data) {
                     if (data == 'success') {
-                        alert('更新成功！');
+                        reload();
                     }
                 }
             });
         }
     });
+
+    function reload(param) {
+        let req = param || '0';
+        $.ajax({
+            type: 'get',
+            url: '/get/' + req,
+            success: function (data) {
+                if (data) {
+                    console.log(data);
+
+                    let str = '';
+                    $('.table tbody').html().length && $('.table tbody').empty();
+
+                    $.each(data, (i, item) => {
+                        str +=
+                            ' <tr>' +
+                            ' <th scope="row">' + item.id + '</th>' +
+                            ' <td>' + item.name + '</td>' +
+                            ' <td>' + item.data + '</td>' +
+                            ' </tr>';
+                    });
+
+                    $('.table tbody').append(str);
+
+
+                }
+            }
+        });
+    }
+
+    reload();
+
+
 </script>
 </body>
 </html>

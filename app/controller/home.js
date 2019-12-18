@@ -1,17 +1,4 @@
 'use strict';
-
-// const Controller = require('egg').Controller;
-//
-// class HomeController extends Controller {
-//     async index() {
-//         const {ctx} = this;
-//         ctx.body = 'hi, cai';
-//     }
-// }
-//
-// module.exports = HomeController;
-
-//* 同等async yeild同等于函数中的return
 module.exports = app => {
     class HomeController extends app.Controller {
         * index() {
@@ -40,9 +27,8 @@ module.exports = app => {
         }
 
         * update() {
-            const data = this.ctx.params.data;
-            const result = yield this.service.mysql.update(data);
-            this.ctx.body = result;
+            const data = this.ctx.request.body;
+            this.ctx.body = yield this.service.mysql.update(data);
         }
 
     }

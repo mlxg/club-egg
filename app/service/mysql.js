@@ -1,9 +1,9 @@
 module.exports = app => {
     return class User extends app.Service {
-        * add() {
+        async add() {
             const data = this.ctx.params.data;
             // 表格名称test,数据库名称在config/config.default.js下已定义
-            const result = yield this.app.mysql.insert('student', {
+            const result = await this.app.mysql.insert('student', {
                 // 时间优化下
                 'data': new Date(+new Date() + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''),
                 'name': data
@@ -30,16 +30,15 @@ module.exports = app => {
 
         * reach() {
             const data = this.ctx.params.data;
-            // get单条查询,select多条查询和全部 0这里表示查全部数据
-            const result = data == 0
+
+            const columns = 'id,name,data',
+                table = 'student',
+                sql = `select ${columns} from ${table} where name like "%${data}%"`;
+
+            const result = data === 'all'
                 ? yield this.app.mysql.select('student')
-                : yield this.app.mysql.select('student', {
-                    where: {name: data}, // WHERE 条件
-                    columns: ['id', 'name', 'data'], // 要查询的表字段
-                    orders: ['data'], // 排序方式
-                    limit: 5,
-                    offset: 0, // 数据偏移量
-                });
+                : yield this.app.mysql.query(sql);
+
             if (result) {
                 return result;
             } else {
@@ -49,18 +48,17 @@ module.exports = app => {
                 };
             }
         }
-
 
         * update() {
-            const data = this.ctx.params.data;
-            console.log('更新数据' + data);
-            const result = yield this.app.mysql.update('student', {
-                id: '1',
-                'name': 'ceshi'
-            });
+            const data = this.ctx.request.body;
+
+            const query = `update student set name = ${data.name} where id = ${data.id}`;
+            const result = yield this.app.mysql.query(query);
 
             if (result) {
-                return result;
+                return {
+                    data:'success'
+                };
             } else {
                 return {
                     code: '1001',
@@ -68,5 +66,6 @@ module.exports = app => {
                 };
             }
         }
+
     };
 };
